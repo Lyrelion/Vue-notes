@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 按下ASCII码值为65的按键，就会触发函数handle -->
+        <!-- 这条语句的意思：按下回车键，触发对应函数，在控制台展示按下的键值 -->
+        <input type="text" v-on:keyup.aaa='handle' v-model='info'>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        // 事件绑定-自定义按键修饰符
+        // 规则：自定义按键修饰符名字是自定义的，但码值必须是所希望按键对应event.keyCode值
+
+        Vue.config.keyCodes.aaa = 65
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                info: ''
+            },
+            methods: {
+                handle: function(event) {
+                    // 这里会在控制台打印按下的键ASCII码值
+                    console.log(event.keyCode)
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

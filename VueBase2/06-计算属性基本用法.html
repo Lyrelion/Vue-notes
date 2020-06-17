@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <div>{{msg}}</div>
+        <!-- 计算属性 只需把定义好的 计算属性 写上来就可以了，无需括号 -->
+        <div>{{reverseString}}</div>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                    计算属性 computed 
+                    场景：把复杂的逻辑抽取出来，让模板更加简洁
+                    基于data中的数据做处理的，所以也是双向绑定的效果
+                                    */
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                msg: 'Nihao,TeaMeow!'
+            },
+            computed: {
+                reverseString: function() { // 此计算属性实现了字符串翻转输出
+                    // 获取data里的msg用this
+                    // 将字符串分割成数组：split('')
+                    // 将数组进行翻转：reverse()
+                    // 将数组拼接成字符串格式：join('')
+                    return this.msg.split('').reverse().join('');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

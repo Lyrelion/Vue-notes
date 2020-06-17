@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <div id="app">
+        <div>水果列表</div>
+        <ul>
+            <li v-for='item in fruits'>{{item}}</li>
+            <!-- 此处的index，是遍历数组时，自动生成的，数组中可能并没有定义index -->
+            <li v-for='(item, index) in fruits'>{{item + '---' + index}}</li>
+            <!-- :key的作用：方便vue快速查找，提高性能，后面跟id -->
+            <!-- 这个id如果在数组中定义了，就采取遍历数组中定义的id -->
+            <!-- 如果没有定义，就采取遍历时自动生成的index :key='item.index' -->
+            <li :key='item.id' v-for='(item, index) in myFruits'>
+                <!-- 遍历获取对象数组中，每个对象的属性值 -->
+                <span>{{item.ename}}</span>
+                <span>-----</span>
+                <span>{{item.cname}}</span>
+            </li>
+
+        </ul>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                      循环结构-遍历数组
+                    */
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                // 定义了数组
+                fruits: ['apple', 'orange', 'banana'],
+                // 定义了对象数组
+                myFruits: [{
+                    id: 1,
+                    ename: 'apple',
+                    cname: '苹果'
+                }, {
+                    id: 2,
+                    ename: 'orange',
+                    cname: '橘子'
+                }, {
+                    id: 3,
+                    ename: 'banana',
+                    cname: '香蕉'
+                }]
+            }
+        });
+    </script>
+</body>
+
+</html>

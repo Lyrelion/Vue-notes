@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <form action="">
+            <div>
+                用户名：
+                <!-- @keyup 监听键盘事件，.delete 规定的按键修饰符，按键后触发函数 -->
+                <!-- 按删除键后，清空用户名输入框内容 -->
+                <input type="text" v-on:keyup.delete='clearContent' v-model='uname'>
+            </div>
+            <div>
+                <!-- 按键后自动提交，f1在下面配置成了回车键的ACSII码值 -->
+                <!-- 也就是按下回车，触发绑定函数，实现自动提交 -->
+                密码：
+                <input type="text" v-on:keyup.f1='handleSubmit' v-model='pwd'>
+            </div>
+            <div>
+                <input type="button" v-on:click='handleSubmit' value="提交">
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        // 事件绑定-按键修饰符
+        // 自定义按键修饰符（相当于给这个ASCII码值得按键重命名）
+        Vue.config.keyCodes.f1 = 113
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                uname: '',
+                pwd: '',
+            },
+            methods: {
+                clearContent: function() {
+                    this.uname = ''; // 按 delete键 清空用户名
+                },
+                handleSubmit: function() { // 实现提交后控制台输出姓名密码
+                    console.log(this.uname, this.pwd)
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

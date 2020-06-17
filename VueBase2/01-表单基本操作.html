@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style type="text/css">
+        form div {
+            height: 40px;
+            line-height: 40px;
+        }
+        
+        form div:nth-child(4) {
+            height: auto;
+        }
+        
+        form div span:first-child {
+            display: inline-block;
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <form action="https://blog.csdn.net/Lyrelion">
+            <div>
+                <span>姓名：</span>
+                <!-- 双向数据绑定 uname -->
+                <span><input type="text" v-model='uname'></span>
+            </div>
+            <div>
+                <span>性别：</span>
+                <span>
+          <!-- for-id联合使用绑定，v-model在data中定义，v-model就是控制value -->
+          <!-- 单选框中的 v-model的值应该相同 -->
+          <input type="radio" id="male" value="1" v-model='gender'>
+          <label for="male">男</label>
+          <input type="radio" id="female" value="2" v-model='gender'>
+          <label for="female">女</label>
+        </span>
+            </div>
+            <div>
+                <span>爱好：</span>
+                <!-- 复选框中的v-model的值应该相同，v-model就是控制value  -->
+                <input type="checkbox" id="ball" value="1" v-model='hobby'>
+                <label for="ball">篮球</label>
+                <input type="checkbox" id="sing" value="2" v-model='hobby'>
+                <label for="sing">唱歌</label>
+                <input type="checkbox" id="code" value="3" v-model='hobby'>
+                <label for="code">写代码</label>
+            </div>
+            <div>
+                <span>职业：</span>
+                <!-- multiple：允许多选，下拉列表只在select中绑定v-model即可 -->
+                <select v-model='occupation' multiple>
+          <option value="0">请选择职业...</option>
+          <option value="1">教师</option>
+          <option value="2">软件工程师</option>
+          <option value="3">律师</option>
+        </select>
+            </div>
+            <div>
+                <span>个人简介：</span>
+                <!-- vue的文本域内容不能写在标签中间，必须用数据绑定才行 -->
+                <textarea v-model='desc'></textarea>
+            </div>
+            <div>
+                <!-- 事件修饰符 阻止自动提交 跳转到别的网页 的行为 -->
+                <input type="submit" value="提交" @click.prevent='handle'>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                                      表单基本操作
+                                    */
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                uname: '茶茶子',
+                // v-model定义的gender，对应的值就是表单的 value值，此处指定默认 value值
+                gender: 2,
+                // 复选框处理多个值，所以应该是数组
+                hobby: ['2', '3'],
+                // occupation: 3 单选单个数值
+                occupation: ['2', '3'], // 多选展示数组
+                desc: '我是文本域'
+            },
+            methods: {
+                handle: function() {
+                    // console.log(this.uname)
+                    // console.log(this.gender)
+                    // 默认输出爱好数组，加上转换为字符串 就输出逗号分隔的字符串了
+                    // console.log(this.hobby.toString())
+                    // console.log(this.occupation)
+                    console.log(this.desc)
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

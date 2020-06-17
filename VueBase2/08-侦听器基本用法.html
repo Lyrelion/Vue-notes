@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <div>
+            <span>名：</span>
+            <span>
+        <!-- 因为对数据要进行操作，所以绑定v-model -->
+        <input type="text" v-model='firstName'>
+      </span>
+        </div>
+        <div>
+            <span>姓：</span>
+            <span>
+        <input type="text" v-model='lastName'>
+      </span>
+        </div>
+        <div>{{fullName1}}</div>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                      侦听器：处理异步的/开销大的操作  
+                      侦听器监听属性的变化，当属性变化时执行一定的操作
+                    */
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                firstName: 'Tea',
+                lastName: 'Meow',
+                // fullName: 'Tea Meow'
+            },
+            computed: { // 计算属性返回全名 
+                fullName1: function() {
+                    return this.firstName + ' ' + this.lastName;
+                }
+            },
+            watch: { // 侦听器返回全名
+                // firstName: function(val) { // val是用户最新输入的值
+                //   this.fullName = val + ' ' + this.lastName;
+                // }, 
+                // lastName: function(val) {
+                //   this.fullName = this.firstName + ' ' + val;
+                // }
+            }
+        });
+    </script>
+</body>
+
+</html>

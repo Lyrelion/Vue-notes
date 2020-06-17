@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <div>
+            <span>用户名：</span>
+            <span>
+        <!-- 对名字验证所以绑定v-model 名字失去焦点后再验证.lazy -->
+        <input type="text" v-model.lazy='uname'>
+      </span>
+            <!-- 提示验证是否成功的信息，也要进行数据绑定 -->
+            <span>{{tip}}</span>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*      
+                      侦听器-处理异步操作实例展示
+                      1、采用侦听器监听用户名的变化
+                      2、调用后台接口进行验证
+                      3、根据验证的结果调整提示信息
+                    */
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                uname: '',
+                tip: ''
+            },
+            methods: {
+                checkName: function(uname) {
+                    // 调用接口，但是可以使用定时任务的方式模拟接口调用
+                    var that = this; // 这里this指vue实例，定时器里this指window
+                    setTimeout(function() {
+                        // 模拟接口调用
+                        if (uname == 'admin') {
+                            that.tip = '用户名已经存在，请更换一个'; // wendow没有tip，vm才有
+                        } else {
+                            that.tip = '用户名可以使用';
+                        }
+                    }, 2000);
+                }
+            },
+            watch: { // 监听 uname变化，val是用户输入的值
+                uname: function(val) {
+                    // 调用后台接口验证用户名的合法性，这个耗时
+                    this.checkName(val);
+                    // 修改提示信息
+                    this.tip = '正在验证...'; // 先显示正在验证。再根据接口结果修改验证
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

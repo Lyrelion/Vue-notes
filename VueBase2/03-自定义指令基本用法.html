@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 默认打开 是不存在焦点定位的 必须通过鼠标点击 -->
+        <input type="text">
+        <!-- 打开页面后焦点自动定位到第二个输入框 -->
+        <input type="text" v-focus>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        // 自定义指令
+        Vue.directive('focus', {
+            inserted: function(element) {
+                // element 表示指令所绑定的元素
+                element.focus();
+            }
+        });
+        var vm = new Vue({
+            el: '#app',
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <div>
+            <span>
+        <input type="text" v-model='fname'>
+        <button @click='add'>添加</button>
+        <button @click='del'>删除</button>
+        <button @click='change'>替换</button>
+      </span>
+        </div>
+        <ul>
+            <li :key='index' v-for='(item,index) in list'>{{item}}</li>
+        </ul>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+        Vue数组操作
+        1、变异方法：会影响数组的原始数据的变化。
+        默认数组操作方法并不是响应式的，vue将之处理成数据响应式。
+        push()pop()shift()unshift()splice(数组删除)sort(排序)reverse(翻转)
+        区分：slice(字符串截取/数组截取) split(字符串转数组) join（数组转字符串
+        2、替换数组：不会影响原始的数组数据，而是形成一个新的数组，需要重新赋值显示数组
+        filter()/concat()/slice(数组截取)
+                                    */
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                fname: '',
+                list: ['apple', 'orange', 'banana']
+            },
+            methods: {
+                add: function() {
+                    // 数据变化直接影响内容变化
+                    // 将输入框绑定的数据fname 直接加入 list列表，并展示出来
+                    // 这里变异方法，操作完了直接改变了
+                    this.list.push(this.fname);
+                },
+                del: function() {
+                    this.list.pop();
+                },
+                change: function() {
+                    // 这里替换方法，操作完了得进行重新赋值，才能改变页面
+                    this.list = this.list.slice(0, 2);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

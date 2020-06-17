@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style type="text/css">
+        .active {
+            border: 1px solid red;
+            width: 100px;
+            height: 100px;
+        }
+        
+        .error {
+            background-color: orange;
+        }
+        
+        .test {
+            color: blue;
+        }
+        
+        .base {
+            font-size: 28px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 混合使用数组+对象 -->
+        <div v-bind:class='[activeClass, errorClass, {test: isTest}]'>测试样式</div>
+        <!-- 把需要的类合并在一个数组里，在vm.data中定义 合并的类数组 -->
+        <div v-bind:class='arrClasses'></div>
+        <!-- 把需要的类合并在一个对象里，在vm.data中定义 合并的类对象 -->
+        <div v-bind:class='objClasses'></div>
+        <!-- 切换合并对象类/数组类的 某个单独类，本质就是改对象类标志位 和 数组类内容 -->
+        <button v-on:click='handle'>切换</button>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                      样式绑定细节：
+                      1、对象绑定和数组绑定可以结合使用
+                      2、class绑定的值可以简化操作
+                    */
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                activeClass: 'active',
+                errorClass: 'error',
+                isTest: true,
+                // 合并的类数组，直接写类名
+                arrClasses: ['active', 'error'],
+                // 合并的对象，直接写类标志位
+                objClasses: {
+                    active: true,
+                    error: true
+                }
+            },
+            methods: {
+                handle: function() {
+                    // this.isTest = false;
+                    this.objClasses.error = false;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

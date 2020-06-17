@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <div id="app">
+        <!-- 遍历对象：（键值、键名、索引）in obj -->
+        <!-- 遍历和 v-if结合使用 比如下面，只会渲染键值是21的属性到页面中 -->
+        <div v-if='v==21' v-for='(v,k,i) in obj'>{{v + '---' + k + '---' + i}}</div>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        // 原生js遍历对象 控制台中查看
+        var obj = {
+            uname: 'TeaMeow',
+            age: 21,
+            gender: 'famale'
+        }
+        for (var key in obj) {
+            console.log(key, obj[key]) // 属性名，属性值
+        }
+        /*
+          循环结构
+        */
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                obj: {
+                    uname: '茶茶子',
+                    age: 21,
+                    gender: 'female'
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

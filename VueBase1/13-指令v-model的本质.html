@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <div>{{msg}}</div>
+        <input type="text" v-bind:value="msg" v-on:input='handle'>
+        <!-- @input 也可以不绑定函数，直接绑定事件，注意此处的$event所携带的符号 -->
+        <input type="text" v-bind:value="msg" v-on:input='msg=$event.target.value'>
+        <input type="text" v-model='msg'>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                v-model指令的本质
+                利用属性绑定，实现从数据到页面的控制（从vm实例data到页面）
+                利用事件监听，实现从页面到数据的控制（页面输入改变，监听，然后让 vm实例 发生变化）
+                    */
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                msg: 'hello'
+            },
+            methods: {
+                handle: function(event) {
+                    // 使用输入域中的最新的数据覆盖原来的数据
+                    this.msg = event.target.value;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

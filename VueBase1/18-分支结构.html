@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <div id="app">
+        <div v-if='score>=90'>优秀</div>
+        <div v-else-if='score<90&&score>=80'>良好</div>
+        <div v-else-if='score<80&&score>60'>一般</div>
+        <div v-else>比较差</div>
+        <!-- 此处的v-show一定会渲染，但是否显示是由他的flag决定的 -->
+        <div v-show='flag'>测试v-show</div>
+        <button v-on:click='handle'>点击</button>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                      分支结构
+                      v-if：控制元素是否渲染到页面，控制台不会显示未渲染的 DOM元素
+                      v-show：控制元素是否显示（已经渲染到了页面）,控制台显示了渲染但是隐藏的元素
+                    */
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                score: 10,
+                flag: false
+            },
+            methods: {
+                handle: function() {
+                    // 是否显示，直接取反，实现切换效果
+                    this.flag = !this.flag;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

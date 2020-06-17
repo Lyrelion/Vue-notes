@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 带参数自定义指令 -->
+        <input type="text" v-color='msg'>
+        <!-- 不带参数自定义指令 -->
+        <input type="text" v-focus>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                      自定义指令-局部指令 写在vue实例内部；全局指令 写在vue实例外部
+                      // 局部指令 directives带s，只能在本组件中使用
+                      // 全局指令 directive 不带s，使用范围没有限制
+                    */
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                msg: {
+                    color: 'red'
+                }
+            },
+            // bind/inserted 使用效果几乎一样，带不带参数都可以用
+            directives: {
+                color: {
+                    bind: function(el, binding) { // 带参数的自定义指令 
+                        el.style.backgroundColor = binding.value.color;
+                    }
+                },
+                focus: {
+                    inserted: function(el) { // 不带参数的自定义指令 
+                        el.focus();
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

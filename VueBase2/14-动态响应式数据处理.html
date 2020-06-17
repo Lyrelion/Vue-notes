@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <ul>
+            <li v-for='item in list'>{{item}}</li>
+        </ul>
+        <div>
+            <div>{{info.name}}</div>
+            <div>{{info.age}}</div>
+            <div>{{info.gender}}</div>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                              动态处理响应式数据
+                              数组和对象的响应式处理
+                              
+                            */
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                list: ['apple', 'orange', 'banana'],
+                info: {
+                    name: 'lisi',
+                    age: 12
+                }
+            },
+        });
+        // 处理数组
+        // 用索引的方式修改，会导致页面内数据不改变，而控制台数据改变
+        // 即 用索引的方式修改并不是响应式的
+        // vm.list[1] = 'lemon'; 
+
+        // 下面这种方法修改起来是响应式的
+        // vm.$set(修改的数组名称，索引，修改的值)
+        // Vue.set(vm.list, 2, 'lemon');
+        vm.$set(vm.list, 1, 'lemon');
+
+        // 处理对象属性
+        // vm.info.gender = 'female'; // 这不是响应式的写法
+        // vm.$set(修改的对象名称，属性，修改的属性值)
+        vm.$set(vm.info, 'gender', 'female');
+    </script>
+</body>
+
+</html>

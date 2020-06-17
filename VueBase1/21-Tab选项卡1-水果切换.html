@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style type="text/css">
+        .tab ul {
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .tab ul li {
+            box-sizing: border-box;
+            padding: 0;
+            float: left;
+            width: 100px;
+            height: 45px;
+            line-height: 45px;
+            list-style: none;
+            text-align: center;
+            border-top: 1px solid blue;
+            border-right: 1px solid blue;
+            cursor: pointer;
+        }
+        
+        .tab ul li:first-child {
+            border-left: 1px solid blue;
+        }
+        
+        .tab ul li.active {
+            background-color: orange;
+        }
+        
+        .tab div {
+            width: 500px;
+            height: 300px;
+            display: none;
+            text-align: center;
+            font-size: 30px;
+            line-height: 300px;
+            border: 1px solid blue;
+            border-top: 0px;
+        }
+        
+        .tab div.current {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 导航栏列表 -->
+        <div class="tab">
+            <!-- 绑定点击事件，改变当前索引（关键） 点击索引是通过遍历拿到的 -->
+            <!-- 绑定属性class，当前索引如果=遍历索引，就添加导航栏被选中的样式 -->
+            <!-- 选项卡操作的本质就是：根据当前索引切换类名 -->
+            <!-- 循环遍历对象数组中的名字属性，并渲染到页面中 -->
+            <ul>
+                <li @click='change(index)' :class='currentIndex==index?"active":""' :key='item.id' v-for='(item,index) in list'>
+                    {{item.title}}
+                </li>
+            </ul>
+            <!-- 导航栏对应内容列表 -->
+
+            <!-- 绑定属性class，当前索引如果=遍历索引，就添加导航栏对应图片被选中的样式 -->
+            <!-- 循环遍历对象数组中的图片地址属性，并渲染到页面中 -->
+            <div :class='currentIndex==index?"current":""' :key='item.id' v-for='(item, index) in list'>
+                <!-- 对图片进行属性绑定 -->
+                <img :src="item.path">
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                currentIndex: 0, // 选项卡当前的索引
+                list: [{
+                    id: 1,
+                    title: 'apple',
+                    path: 'img/apple.png'
+                }, {
+                    id: 2,
+                    title: 'orange',
+                    path: 'img/orange.png'
+                }, {
+                    id: 3,
+                    title: 'lemon',
+                    path: 'img/lemon.png'
+                }]
+            },
+            methods: {
+                change: function(index) {
+                    // 被点击才能实现将 当前索引 转换为 点击索引
+                    this.currentIndex = index;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

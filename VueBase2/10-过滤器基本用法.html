@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <input type="text" v-model='msg'>
+        <!-- 插值表达式过滤器 -->
+        <div>{{msg | upper}}</div>
+        <!-- 级联操作过滤器 -->
+        <div>{{msg | upper | lower}}</div>
+        <!-- 属性绑定过滤器 -->
+        <!-- 控制台中显示测试数据的样式，样式属性多了abc，属性值变成大写的输入msg -->
+        <div :abc='msg | upper'>测试数据</div>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                      过滤器
+                      1、可以用与插值表达式和属性绑定
+                      2、支持级联操作，即同时使用多个过滤器
+                    */
+        // Vue.filter('upper', function(val) { // val用户输入的值
+        //   // 用户输入的值：第一个字母转换为大写 拼接 从第二个字符开始截取的剩下部分
+        //   // slice()：字符串截取
+        //   return val.charAt(0).toUpperCase() + val.slice(1);
+        // });
+        Vue.filter('lower', function(val) { // 全局定义的过滤器
+            return val.charAt(0).toLowerCase() + val.slice(1);
+        });
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                msg: ''
+            },
+            filters: { // 局部定义的过滤器
+                upper: function(val) {
+                    return val.charAt(0).toUpperCase() + val.slice(1);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

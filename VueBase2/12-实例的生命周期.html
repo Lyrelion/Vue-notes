@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 初始化 -->
+        <div>{{msg}}</div>
+        <button @click='update'>更新</button>
+        <button @click='destroy'>销毁</button>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                      Vue实例的生命周期  
+                    */
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                msg: '生命周期'
+            },
+            methods: {
+                update: function() { // 更新
+                    this.msg = 'hello';
+                },
+                destroy: function() {
+                    this.$destroy(); // 销毁vue实例：$destory()
+                }
+            },
+            // 生命周期钩子函数
+            // 初始化调用方法：beforeCreate、created、 beforeMount、mounted
+            beforeCreate: function() {
+                console.log('beforeCreate');
+            },
+            created: function() {
+                console.log('created');
+            },
+            beforeMount: function() {
+                console.log('beforeMount');
+            },
+            // mounted：这个方法执行后，证明模板初始化完成，可以调用后端接口获取数据了
+            mounted: function() {
+                console.log('mounted');
+            },
+            // 更新调用方法：beforeUpdate、updated
+            beforeUpdate: function() {
+                console.log('beforeUpdate');
+            },
+            updated: function() {
+                console.log('updated');
+            },
+            // 销毁调用方法：beforeDestroy、destroyed
+            beforeDestroy: function() {
+                console.log('beforeDestroy');
+            },
+            destroyed: function() {
+                console.log('destroyed');
+            }
+        });
+    </script>
+</body>
+
+</html>

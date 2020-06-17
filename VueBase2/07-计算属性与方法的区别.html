@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 计算属性 控制台仅输出了一次console内容，输出两次计算结果-->
+        <!-- 原因：只执行了一次计算逻辑，所以输出一次 console的内容 -->
+        <!-- 浏览器输出两次结果，第二次并没有真正执行计算逻辑，而是从缓存中拿结果 -->
+        <!-- 执行了不同计算逻辑，控制台才会有不同的输出，
+            执行相同计算逻辑，控制台不会重复输出，浏览器从缓存拿结果 -->
+        <div>{{reverseString}}</div>
+        <div>{{reverseString}}</div>
+        <!-- 方法 控制台输出了两次console内容，浏览器输出两次msg翻转结果 -->
+        <div>{{reverseMessage()}}</div>
+        <div>{{reverseMessage()}}</div>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                      计算属性与方法的区别:计算属性是基于依赖进行缓存的，而方法不缓存
+                    */
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                msg: 'Nihao',
+                num: 100
+            },
+            methods: { // 方法
+                reverseMessage: function() {
+                    console.log('methods') // 控制台输出两次 methods
+                    return this.msg.split('').reverse().join(''); // 浏览器显示两次字符串翻转结果
+                }
+            },
+            computed: { // 计算属性
+                reverseString: function() {
+                    console.log('computed') // 控制台输出一次 computed
+                    var total = 0;
+                    for (var i = 0; i <= this.num; i++) {
+                        total += i;
+                    }
+                    return total; // 浏览器输出两次5050
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
