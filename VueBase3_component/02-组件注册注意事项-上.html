@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<!-- 组件化开发思想：把不同的功能封装在不同的组件中，通过不同组件的组合实现应用创建 -->
+<!-- Web Components 通过创建封装好功能的定制元素促进组件化开发 -->
+
+<body>
+    <div id="app">
+        <button-counter></button-counter>
+        <button-counter></button-counter>
+        <button-counter></button-counter>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                                      组件注册注意事项
+                                      1、组件参数的data值必须是函数
+                                      2、组件模板必须是单个根元素
+                                      3、组件模板的内容可以是模板字符串
+
+                                    */
+        // Vue.component('button-counter', {
+        //   data: function(){ // 组件参数的data值必须是函数
+        //     return {
+        //       count: 0
+        //     }
+        //   },
+        //  组件模板必须是单个根元素，两个button并列报错，除非用div包裹
+        //   template: '<div><button @click="handle">点击了{{count}}次</button><button>测试</button></div>',
+        //   methods: {
+        //     handle: function(){
+        //       this.count += 2;
+        //     }
+        //   }
+        // })
+        // -----------------------------------
+        Vue.component('button-counter', {
+                data: function() {
+                    return {
+                        count: 0
+                    }
+                },
+                // 组件模板的内容可以是模板字符串
+                // 注意这里的符号是反引号，键盘英文模式下单击~就能出现``
+                template: `
+        <div>
+          <button @click="handle">点击了{{count}}次</button>
+          <button>测试123</button>
+        </div>
+      `,
+                methods: {
+                    handle: function() {
+                        this.count += 2;
+                        return count
+                    }
+                }
+            })
+            // vm实例中 data的值 是对象{}
+            // 组件中 data的值 是函数 function(){return xxx...}
+        var vm = new Vue({
+            el: '#app',
+            data: {
+
+            }
+        });
+    </script>
+</body>
+
+</html>

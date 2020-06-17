@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>axios请求传参</h1>
+    <p>axios单独提供 params属性，作用是：这个对象可以传参</p>
+    <p>axios.请求方式('url',{params传递参数对象}).then()</p>
+    <p>后台对于 params 传递参数，采用类似于 restful形式的url 传递参数处理，即都采用 req.params.xxx</p>
+    <hr>
+    <p>post请求方式：不用加 params对象传递参数，直接写 json对象 即可</p>
+    <p>post请求方式还可以采用：URLSearchParams 传递参数（不推荐，太麻烦了） </p>
+    <p>实例化对象：var params = new URLSearchParams();</p>
+    <p>给对象追加属性：params.append('uname', '茶茶子');</p>
+    <p>传递参数：axios.post('http://localhost:3000/axios', params)</p>
+    <script type="text/javascript" src="js/axios.js"></script>
+    <script type="text/javascript">
+        /*
+                                                                                      
+                                                                                    */
+        // GET参数传递-传统URL
+        // axios.get('http://localhost:3000/axios?id=123')
+        //      .then(function(ret){
+        //            console.log(ret.data) // req.query.id
+        // })
+        // GET参数传递-restful形式的URL
+        // axios.get('http://localhost:3000/axios/123')
+        //      .then(function(ret){
+        //            console.log(ret.data) // req.params.id 
+        // })
+        // axios单独提供 params属性，作用是：这个对象可以传参
+        // 此时后台获取参数采用：req.params.id，类似于后台对待 restful形式的url传参
+        // axios.get('http://localhost:3000/axios', {
+        //     params: {
+        //         id: 789
+        //     }
+        // }).then(function(ret) {
+        //     console.log(ret.data)
+        // })
+
+        // axios delete 请求传参
+        // 我在这里如果采用 get+params参数 那种方式传参会一直报错，所以继续采用了restful风格的方式传参
+        // axios.delete('http://localhost:3000/axios/111', {}).then(function(ret) {
+        //     console.log(ret.data)
+        // });
+
+        // post里面不用加params参数，直接写json对象即可
+        // axios.post('http://localhost:3000/axios', { 
+        //   uname: '茶茶子',
+        //   pwd: 123
+        // }).then(function(ret){
+        //   console.log(ret.data) 
+        // })
+
+        // 通过 URLSearchParams 传递参数 
+        // var params = new URLSearchParams();
+        // params.append('uname', '茶茶子');
+        // params.append('pwd', '111');
+        // axios.post('http://localhost:3000/axios', params)
+        //      .then(function(ret){
+        //              console.log(ret.data)
+        // })
+
+        // axios put 请求传参
+        // 我发现   PUT请求方式 一直存在跨域问题？
+        // axios.put('http://localhost:3000/axios/123', { // 123：req.params.id
+        //     uname: 'TeaMeow', // req.body.uname
+        //     pwd: 123 // req.body.pwd
+        // }).then(function(ret) {
+        //     console.log(ret.data)
+        // })
+    </script>
+</body>
+
+</html>

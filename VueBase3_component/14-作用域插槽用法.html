@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<style type="text/css">
+    .current {
+        color: orange;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <!-- 给子组件传递绑定父组件的数据列表 -->
+        <fruit-list :list='list'>
+            <!-- template 获取插槽作用域的标签 -->
+            <!-- slot-scope：指定作用域范围，slotProps代表了插槽作用域具体包含啥 -->
+            <!-- 此处的 slotProps， 表示下面的 info，也就是 item数组对象 -->
+            <!-- 通过父插槽作用域，实现父组件对子组件数据的处理 -->
+            <template slot-scope='slotProps'>
+                <!-- 如果插槽遍历的数据id=3，那么高亮显示名字，其他的就正常显示名字 -->
+        <strong v-if='slotProps.info.id==3' class="current">{{slotProps.info.name}}</strong>
+        <span v-else>{{slotProps.info.name}}</span>
+      </template>
+        </fruit-list>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                      作用域插槽
+                      在子组件中定义插槽作用域，对数据进行处理
+                      在父组件中接收插槽作用域，实现父组件对子组件的数据进行二次处理
+                    */
+        Vue.component('fruit-list', {
+            // 接收父组件传递的数据
+            props: ['list'],
+            // 若 slot中 没写内容，就默认显示 slot之间的 {{item.name}}
+            // 给 slot绑定属性:info 存储每一项数组信息，也就是 item数组对象，方便上面标签调用
+            template: `
+        <div>
+          <li :key='item.id' v-for='item in list'>
+          <!--这里可以理解成 给插槽绑定作用域 插槽的作用域就是这个item对象数组-->
+            <slot :info='item'>{{item.name}}</slot>
+          </li>
+        </div>
+      `
+        });
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                list: [{
+                    id: 1,
+                    name: 'apple'
+                }, {
+                    id: 2,
+                    name: 'orange'
+                }, {
+                    id: 3,
+                    name: 'banana'
+                }]
+            }
+        });
+    </script>
+</body>
+
+</html>

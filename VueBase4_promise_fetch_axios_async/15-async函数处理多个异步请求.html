@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>async/await处理多个异步任务</h1>
+    <script type="text/javascript" src="js/axios.js"></script>
+    <script type="text/javascript">
+        axios.defaults.baseURL = 'http://localhost:3000';
+
+        async function queryData() { // 封装多个异步任务
+            var info = await axios.get('async1'); // 请求1 获取的结果存在 info里
+            // 请求2需要 请求1获取的结果 作为参数
+            var ret = await axios.get('async2?info=' + info.data);
+            return ret.data;
+        }
+
+        queryData().then(function(data) { // async函数默认返回promise对象，所以要用 .then()读取里面的数据
+            console.log(data)
+        })
+    </script>
+</body>
+
+</html>

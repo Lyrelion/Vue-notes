@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>axios 响应结果与全局配置</h1>
+    <p>axios 响应结果就是 JSON对象格式，无需处理，可直接展示结果对象某属性值：ret.data.uname</p>
+    <p>axios 全局配置基准url地址： axios.defaults.baseURL =</p>
+    <p>axios 配置请求头信息：axios.defaults.headers['mytoken'] = 'hello';</p>
+    <p>配置请求头信息的时候，此时后台要在跨域处理中，允许该请求头访问服务器</p>
+    <p>res.header('Access-Control-Allow-Headers', 'mytoken');</p>
+
+    <script type="text/javascript" src="js/axios.js"></script>
+    <script type="text/javascript">
+        // axios.get('http://localhost:3000/axios-json')
+        //      .then(function(ret){
+        //          console.log(ret.data.uname) // res.json({}) JSON格式响应结果
+        // })
+
+        // 配置请求的基准URL地址
+        axios.defaults.baseURL = 'http://localhost:3000/';
+        // 配置请求头信息 
+        axios.defaults.headers['mytoken'] = 'hello';
+        // 需要后台允许接收相应的请求头
+        // res.header("Access-Control-Allow-Headers", "X-Requested-With");
+        // res.header('Access-Control-Allow-Headers', 'Content-Type');
+        // res.header('Access-Control-Allow-Headers', 'mytoken');
+
+        // 配置完 默认请求地址和请求头之后 发送的请求
+        axios.get('axios-json') // 简写了的请求地址
+            .then(function(ret) {
+                console.log(ret.data.uname)
+            })
+    </script>
+</body>
+
+</html>

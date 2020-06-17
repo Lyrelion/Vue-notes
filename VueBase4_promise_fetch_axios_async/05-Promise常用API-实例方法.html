@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Promise常用API-实例方法</h1>
+    <P>封装一个函数 此函数直接返回一个 执行异步函数的 promise对象</P>
+    <p>调用函数，并通过 .then()/.catch()/.finally()读取结果</p>
+    <p>.finally()// 成功与否都会执行（不是正式标准</p>
+    <p>.then()内部可以同时获得 resolve()、reject() 的处理结果</p>
+    <p>如果 .then()里面携带了两个参数，那么可以省略 .catch()</p>
+    <script type="text/javascript">
+        function foo() {
+            // 此函数直接返回一个 执行异步函数的 promise对象
+            return new Promise(function(resolve, reject) {
+                setTimeout(function() {
+                    // resolve(123); // 正常
+                    reject('error'); // 抛出异常
+                }, 100);
+            })
+        }
+        // 下面调用函数，并通过 .then()/.catch()/.finally()读取结果
+        // foo() 
+        //   .then(function(data){ // 得到 resolve 正常处理结果
+        //     console.log(data)
+        //   })
+        //   .catch(function(data){ // 得到 reject 异常信息
+        //     console.log(data)
+        //   })
+        //   .finally(function(){ // 成功与否都会执行（不是正式标准）
+        //     console.log('finished')
+        //   });
+
+        // --------------------------
+        // 两种写法是等效的
+        // .then()内部可以同时获得 resolve()、reject() 的处理结果
+        // 如果 .then()里面携带了两个参数，那么可以省略 .catch()
+        foo()
+            .then(function(data) {
+                console.log(data)
+            }, function(data) {
+                console.log(data)
+            })
+            .finally(function() {
+                console.log('finished')
+            });
+    </script>
+</body>
+
+</html>

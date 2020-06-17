@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Fetch响应结果的数据格式 </h1>
+    <p>data.text()：返回的响应结果是字符串类型</p>
+    <p>想让获取的数据变成对象格式，有两种方法：</p>
+    <p>第一种：fetch()第一个.then()中，采用 return.data.json() 替换 return.data.text() </p>
+    <p>第二种：fetch()第一个.then()中，采用 return.data.text()，第二个.then()中，将数据转换为JSON对象格式：JSON.parse(data)，并将之存储在对象中</p>
+    <p></p>
+    <script type="text/javascript">
+        // 如何用 fetch()获取 JSON对象格式的响应数据？
+        fetch('http://localhost:3000/json').then(function(data) {
+            return data.json(); //  第一种方式：将获取到的数据使用 json 转换对象（推荐）
+        }).then(function(data) {
+            console.log(data.uname) // json 可以直接获取结果.uname
+        });
+
+        fetch('http://localhost:3000/json')
+            .then(data => {
+                return data.text() // 第二种方式：将获取到的数据 转换成字符串 
+            })
+            .then(function(data) {
+                // console.log(typeof data) //采用 .text()，获取的响应值data是字符串类型
+                var object = JSON.parse(data); // 采用 .text()需要将字符串类响应值转换为JSON对象格式，才能直接获取结果值
+                console.log(object.uname, object.age, object.gender)
+            })
+    </script>
+</body>
+
+</html>

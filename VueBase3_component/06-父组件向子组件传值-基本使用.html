@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 输出结果如下：
+     父组件中内容
+     子组件本身的数据
+     子组件本身的数据----来自父组件的值-----undefined（因为没定义content，看模板）
+     子组件本身的数据----动态绑定属性-----hello 
+
+     title、content ：静态传递父组件的值 给子组件
+     父组件传递静态值，直接写在子组件标签里，不用在 vm中定义 静态值
+     父组件传递动态值，动态值要定义在父组件vm里，:title 后面的 ptitle在父组件里定义
+
+    总结：父组件传值给子组件 都是在 子组件标签 里绑定值，动态带:静态不带:
+子组件通过props属性接收父组件传来的值，就是父组件写在子组件标签上的那些属性
+父组件在子组件标签中传递值，子组件在props属性中拿到该值，并在自己的模板字符串中使用该值 -->
+        <div>{{pmsg}}</div>
+        <menu-item>{{msg}}</menu-item>
+        <menu-item title='来自父组件的值'></menu-item>
+        <menu-item :title='ptitle' content='hello'></menu-item>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                      父组件向子组件传值-基本使用
+                    */
+        Vue.component('menu-item', { // 子组件
+            // 子组件通过props，接收父组件的值（未在vm中声明的静态值）
+            props: ['title', 'content'],
+            data: function() {
+                return {
+                    msg: '子组件本身的数据'
+                }
+            },
+            // 模板中可以使用 props中接受的值
+            template: '<div>{{msg + "----" + title + "-----" + content}}</div>'
+        });
+        var vm = new Vue({ // 根组件
+            el: '#app',
+            data: {
+                pmsg: '父组件中内容',
+                ptitle: '动态绑定属性'
+            }
+        });
+    </script>
+</body>
+
+</html>

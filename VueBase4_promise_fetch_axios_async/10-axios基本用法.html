@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>axios基本用法</h1>
+    <p>1.引入 axios.js库文件</p>
+    <p>2.语法：axios.请求方式('url').then()</p>
+    <p>注意 axios 获取的结果ret包含很多属性，我们需要的data（服务器返回的数据），只是他的属性之一</p>
+    <p>.then(function(ret){console.log(ret.data)})</p>
+    <!-- 引入 axios相关的js库文件 -->
+    <script type="text/javascript" src="js/axios.js"></script>
+    <script type="text/javascript">
+        axios.get('http://localhost:3000/axios0').then(function(ret) {
+                // console.log(ret.data) // 注意data属性是固定的用法，用于获取后台的实际数据
+                console.log(ret) // ret中包含很多其他属性，我们只需要 data属性（服务器返回的数据）
+            })
+            // Object
+            // config: {url: "http://localhost:3000/axios0", method: "get", headers: {…}, transformRequest: Array(1), transformResponse: Array(1), …}
+            // data: "Hello axios!" // 这是我们需要的数据
+            // headers: {content-length: "12", content-type: "text/html; charset=utf-8"}
+            // request: XMLHttpRequest {readyState: 4, timeout: 0, withCredentials: false, upload: XMLHttpRequestUpload, onreadystatechange: ƒ, …}
+            // status: 200
+            // statusText: "OK"
+            // __proto__: Object
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 注意：此处因为没有放插槽。所以组件中间的这些文字↓↓↓不会显示在页面中 -->
+        <button-counter>组件中用短横线命名，普通标签模板中依旧是短横线</button-counter>
+        <hello-world>组件中用驼峰命名，普通标签模板中变成了短横线</hello-world>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                              组件注册注意事项
+                              如果使用 驼峰式 命名组件，那么在使用组件的时候：
+                              在字符串模板中用 驼峰式 使用组件，
+                              在普通标签模板中用 短横线式 使用组件
+                            */
+        Vue.component('HelloWorld', { // 此处驼峰命名组件
+            data: function() {
+                return {
+                    msg: 'HelloWorld'
+                }
+            },
+            template: '<div>{{msg}}</div>'
+        });
+        Vue.component('button-counter', { // 此处短横线命名组件
+            data: function() {
+                return {
+                    count: 0
+                }
+            },
+            // 下面的模板字符串中 驼峰命名的组件 可以保留驼峰式命名
+            template: `
+        <div>
+          <button @click="handle">点击了{{count}}次</button>
+          <button>测试123</button>
+          <HelloWorld></HelloWorld>
+        </div>
+      `,
+            methods: {
+                handle: function() {
+                    this.count += 2;
+                }
+            }
+        })
+        var vm = new Vue({
+            el: '#app',
+            data: {
+
+            }
+        });
+    </script>
+</body>
+
+</html>

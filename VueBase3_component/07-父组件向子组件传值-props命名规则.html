@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <div>{{pmsg}}</div>
+        <!-- 动态向子组件中传递父组件的值 menu-title，值得具体内容为 ptitle 在父组件中定义 -->
+        <menu-item :menu-title='ptitle'></menu-item>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                      父组件向子组件传值-props属性名规则
+                    */
+        Vue.component('third-com', {
+            // 此处接收二号子组件（这个组件的父组件）传递的值，并在模板字符串中展示
+            props: ['testTile'],
+            template: '<div>{{testTile}}</div>'
+        });
+        Vue.component('menu-item', {
+            // 接收 vm父组件 传递过来的值，注意上面标签中是短横线，这里接收是驼峰
+            props: ['menuTitle'],
+            // 模板字符串中也可以继续使用驼峰
+            // 在模板中调用三号子组件 并向他静态传递值 testTile 此处采用了驼峰命名
+            template: '<div>{{menuTitle}}<third-com testTile="hello"></third-com></div>'
+        });
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                pmsg: '父组件中内容',
+                ptitle: '动态绑定属性'
+            }
+        });
+    </script>
+</body>
+
+</html>

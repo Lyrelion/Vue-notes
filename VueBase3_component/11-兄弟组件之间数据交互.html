@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <div>父组件</div>
+        <div>
+            <button @click='handle'>销毁事件</button>
+        </div>
+        <test-tom></test-tom>
+        <test-jerry></test-jerry>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                      兄弟组件之间数据传递
+                    */
+        // 提供事件中心
+        var hub = new Vue();
+
+        Vue.component('test-tom', { // 兄弟组件TOM
+            data: function() {
+                return {
+                    num: 0
+                }
+            },
+            template: `
+        <div>
+          <div>TOM:{{num}}</div>
+          <div>
+            <!--在自己的模板中定义点击事件 触发对方事件 $emit-->
+            <button @click='handle'>点击</button>
+          </div>
+        </div>
+      `,
+            methods: {
+                handle: function() {
+                    // 点击自己后触发别人的什么事件
+                    // 通过事件中心 点击tom按钮，触发对方jerry事件，对方+2
+                    // 事件中心.$emit('对方事件',传递参数)
+                    // 触发对方事件
+                    hub.$emit('jerry-event', 2);
+                }
+            },
+            // mounted: 模板已经就绪了，可以对模板进行操作，比如传数据啥的
+            mounted: function() {
+                // 别人被点击后会触发自己的什么事件 让自己执行什么操作
+                // 事件中心.$on('自己的事件名',接收参数的箭头函数)
+                // 监听自己事件
+                hub.$on('tom-event', (val) => { // 这个val是兄弟组件传递过来的
+                    this.num += val;
+                });
+            }
+        });
+        Vue.component('test-jerry', { // 兄弟组件JERRY
+            data: function() {
+                return {
+                    num: 0
+                }
+            },
+            template: `
+        <div>
+          <div>JERRY:{{num}}</div>
+          <div>
+            <button @click='handle'>点击</button>
+          </div>
+        </div>
+      `,
+            methods: {
+                handle: function() {
+                    // 触发兄弟组件的事件
+                    hub.$emit('tom-event', 1);
+                }
+            },
+            mounted: function() {
+                // 监听事件
+                hub.$on('jerry-event', (val) => {
+                    this.num += val;
+                });
+            }
+        });
+        var vm = new Vue({ // 父组件
+            el: '#app',
+            data: {},
+            methods: {
+                handle: function() {
+                    // 父组件中销毁事件，事件就不会再被触发
+                    // 语法：事件中心.$off('事件')
+                    hub.$off('tom-event');
+                    hub.$off('jerry-event');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

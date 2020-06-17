@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>axios拦截器 interceptors</h1>
+    <p>请求拦截器 设置请求头 比默认配置更灵活</p>
+    <p>响应拦截器 设置响应数据 直接把ret.data取出来 方便后面操作</p>
+
+    <script type="text/javascript" src="js/axios.js"></script>
+    <script type="text/javascript">
+        axios.interceptors.request.use(function(config) { // 请求拦截器
+            config.headers.mytoken = 'nihao'; // 拦截器设置请求头 比默认配置更灵活
+            return config;
+        }, function(err) { // 打印异常
+            console.log(err)
+        })
+
+        axios.interceptors.response.use(function(res) { // 响应拦截器 此处的res是服务器包装对象
+            var data = res.data; // 后台真正的数据，是在包装对象的data属性里 res.data
+            return data;
+        }, function(err) { // 打印异常
+            console.log(err)
+        })
+        axios.get('http://localhost:3000/axios0')
+            .then(function(data) { // 这个data是在响应拦截器中做过处理的
+                console.log(data) // 就是这里的data相当于 服务器传来的数据res中的一个属性data的值
+            })
+    </script>
+</body>
+
+</html>

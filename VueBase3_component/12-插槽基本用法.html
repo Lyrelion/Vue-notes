@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 标签中存在内容，所以会替换插槽中的 '默认内容' -->
+        <alert-box>有bug发生</alert-box>
+        <alert-box>有一个警告</alert-box>
+        <!-- 标签中不存在内容，所以会显示标签中的内容 -->
+        <alert-box></alert-box>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                      组件插槽：父组件向子组件传递内容
+                      <slot></slot>：预留插槽
+                      如果标签中有内容，就用标签的，如果没有内容，就用插槽的
+                    */
+        Vue.component('alert-box', { // 提示框组件
+            template: `
+        <div>
+          <strong>ERROR:</strong>
+          <slot>默认内容</slot>
+        </div>
+      `
+        });
+        var vm = new Vue({
+            el: '#app',
+            data: {}
+        });
+    </script>
+</body>
+
+</html>

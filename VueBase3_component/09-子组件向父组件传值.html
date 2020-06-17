@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 给父组件绑定自己data中的属性 不要忘记单位 展示父组件的内容 -->
+        <div :style='{fontSize: fontSize + "px"}'>{{pmsg}}</div>
+        <!-- 父组件给子组件传递绑定了值parr 并引用子组件的自定义事件 给他绑定方法 -->
+        <menu-item :parr='parr' @enlarge-text='handle'></menu-item>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                      子组件向父组件传值-基本用法
+                      props传递数据原则：单向数据流，子组件尽量不要对父组件数据进行操作
+                      （只允许父组件传递数据给子组件，不允许子组件直接处理父组件的数据）
+
+                      场景：在父组件中定义一组水果，通过动态属性绑定的方式传递给子组件，
+                          在子组件模板中遍历出来并操作添加新的水果，直接操作父组件数据，非常不推荐
+
+                           如果希望子组件操作父组件的数据 ，可通过 自定义事件 
+                          $emit()：自定义事件固定写法，里面写自定义事件名称 '$emit("enlarge-text")'
+
+                          子组件在子组件模板中添加自定义事件 $emit('自定义事件名')
+                          父组件在子组件标签中调用 @自定义事件='函数方法'
+                          在父组件中声明该函数方法，监听该自定义事件
+                    */
+        Vue.component('menu-item', { // 子组件
+            // 接收父组件传递的值
+            props: ['parr'],
+            template: `
+        <div>
+          <ul>
+            <li :key='index' v-for='(item,index) in parr'>{{item}}</li>
+          </ul>
+          <!--在子组件模板中定义添加 自定义事件-->
+          <button @click='$emit("enlarge-text")'>扩大父组件中字体大小</button>
+        </div>
+      `
+        });
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                pmsg: '父组件中内容',
+                parr: ['apple', 'orange', 'banana'],
+                fontSize: 10
+            },
+            methods: {
+                // 在父组件中声明该函数方法，监听子组件的自定义事件
+                handle: function() {
+                    // 扩大字体大小
+                    this.fontSize += 5;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

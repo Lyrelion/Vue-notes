@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>基于Promise发送Ajax请求</h1>
+    <p>把执行了 ajax请求 的 promise对象 封装在一个函数里</p>
+    <p>每次调用函数.then()即可获取结果</p>
+    <p>在读取到结果的同时，返回第二个函数调用结果，后续继续通过.then()读取</p>
+    <p>最终实现按顺序接收异步请求结果</p>
+    <script type="text/javascript">
+        // 封装了一个函数，里面有实例化的promis函数，并且执行了ajax请求
+        function queryData(url) {
+            // 实例化 promise对象，在内部执行原生 ajax
+            var p = new Promise(function(resolve, reject) {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    // 数据不正常，不做处理
+                    if (xhr.readyState != 4)
+                        return;
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // 处理正常的情况
+                        resolve(xhr.responseText);
+                    } else {
+                        // 处理异常情况
+                        reject('服务器错误');
+                    }
+                };
+                xhr.open('get', url);
+                xhr.send(null);
+            });
+            return p; // 返回 promise对象
+        }
+        // 注意：这里需要开启服务
+        // queryData('http://localhost:3000/data') // 调用前面封装的函数
+        //   .then(function(data){
+        //     console.log(data); // 因为数据正常。所以输出 Hello World
+        //   },function(info){
+        //     console.log(info)
+        //   });
+        // ============================
+        //
+        //
+        // 发送多个ajax请求，并且保证顺序
+        // then方法，可以直接 return数据而不是Promise对象，在后面的then中就可以接收到数据
+        queryData('http://localhost:3000/data')
+            .then(function(data) {
+                console.log(data)
+                    // 已经通过then读取到第一个处理结果
+                    // 并返回第二个处理结果（后续通过then()读取）
+                return queryData('http://localhost:3000/data1');
+            })
+            .then(function(data) {
+                console.log(data);
+                return queryData('http://localhost:3000/data2');
+            })
+            .then(function(data) {
+                console.log(data)
+            });
+    </script>
+</body>
+
+</html>

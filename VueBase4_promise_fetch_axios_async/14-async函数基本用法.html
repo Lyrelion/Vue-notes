@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>async/await 处理异步操作</h1>
+    <p>async函数返回一个 Promise实例对象</p>
+    <p>await后面跟一个 Promise实例对象</p>
+
+    <p> 封装 asyns函数调用接口 </p>
+    <p>async function queryData() {</p>
+    <p>var ret = await axios.get('axios0');</p>
+    <p>return ret.data; }</p>
+
+    <script type="text/javascript" src="js/axios.js"></script>
+    <script type="text/javascript">
+        // 传统 axios方式调用接口 
+        // axios.defaults.baseURL = 'http:localhost:3000';
+        // axios.get('axios0')
+        //      .then(function(ret){
+        //            console.log(ret.data)
+        // })
+
+        // 封装 asyns函数调用接口
+        // async function queryData() {
+        //   var ret = await axios.get('axios0');
+        //   return ret.data; 
+        // }
+
+        async function queryData() {
+            // await后面可以直接跟 Promise实例对象
+            // await只能在 使用async定义的函数 中使用
+            var ret = await new Promise(function(resolve, reject) {
+                setTimeout(function() {
+                    resolve('nihao')
+                }, 1000);
+            })
+            return ret;
+        }
+        queryData().then(function(data) { // async函数隐式返回一个promise对象
+            console.log(data) // 可以使用then 获取await里面的值 nihao 
+        })
+    </script>
+</body>
+
+</html>

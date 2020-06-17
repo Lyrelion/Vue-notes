@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>前后端交互</div>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript">
+        /*
+                              前后端交互-异步编程与Promise概述
+                            */
+        // var ret = '---';
+        // $.ajax({
+        //   url: 'http://localhost:3000/data',
+        //   success: function(data) {
+        //     ret = data;
+        //     console.log(ret) // 这里会输出 data数据 Hello World!
+        //   }
+        // });
+        // console.log(ret) // 这里会输出 --- 而不是替代成 data，因为同步先执行
+
+        // ----------------------------
+        // 异步函数的结果不一定按照书写顺序输出
+        // $.ajax({
+        //   url: 'http://localhost:3000/data',
+        //   success: function(data) {
+        //     console.log(data) // Hello World
+        //   }
+        // });
+        // $.ajax({
+        //   url: 'http://localhost:3000/data1', 
+        //   success: function(data) {
+        //   // 服务器端给data1路由返回结果添加1s延迟
+        //     console.log(data) // Hello Tom
+        //   }
+        // });
+        // $.ajax({
+        //   url: 'http://localhost:3000/data2',
+        //   success: function(data) {
+        //     console.log(data) // Hello Jerry
+        //   }
+        // });
+        // // 输出顺序：Hello World   Hello Jerry   Hello Tom     
+        // -----------------------------------
+        // 如果希望异步函数的值按顺序输出，那么就通过 回调函数不断嵌套
+        // 代码可读性差 “回调地狱问题”
+        $.ajax({
+            url: 'http://localhost:3000/data',
+            success: function(data) {
+                // 注意：此处是在成功结果里 继续嵌套 让后一个异步函数顺序输出
+                console.log(data)
+                $.ajax({
+                    url: 'http://localhost:3000/data1',
+                    success: function(data) {
+                        console.log(data)
+                        $.ajax({
+                            url: 'http://localhost:3000/data2',
+                            success: function(data) {
+                                console.log(data)
+                            }
+                        });
+                    }
+                });
+            }
+        });
+        // 直接在浏览器中运行这个文件，而不是输入请求路径
+    </script>
+</body>
+
+</html>

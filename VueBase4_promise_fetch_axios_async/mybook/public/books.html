@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="grid">
+            <div>
+                <h1>图书管理</h1>
+                <div class="book">
+                    <div>
+                        <label for="id">
+              编号：
+            </label>
+                        <input type="text" id="id" v-model='id' disabled="false" v-focus>
+                        <label for="name">
+              名称：
+            </label>
+                        <input type="text" id="name" v-model='name'>
+                        <button @click='handle' :disabled="submitFlag">提交</button>
+                    </div>
+                </div>
+            </div>
+            <div class="total">
+                <span>图书总数：</span>
+                <span>{{total}}</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>名称</th>
+                        <th>时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr :key='item.id' v-for='item in books'>
+                        <td>{{item.id}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.date | format('yyyy-MM-dd hh:mm:ss')}}</td>
+                        <td>
+                            <a href="" @click.prevent='toEdit(item.id)'>修改</a>
+                            <span>|</span>
+                            <a href="" @click.prevent='deleteBook(item.id)'>删除</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="js/axios.js"></script>
+    <script type="text/javascript">
+        /*
+              图书管理
+            */
+        // 设置基础路径
+        axios.defaults.baseURL = 'http://localhost:3000/';
+        // axios拦截器：处理axios响应值，将它的数据直接返回出来
+        axios.interceptors.response.use(function(res) {
+            // axios返回的结果res包含很多属性，唯有res.data才是所需要的数据
+            return res.data;
+        }, function(error) {
+            console.log(error)
+        });
+        Vue.directive('focus', { // 自定义指令
+            inserted: function(el) {
+                el.focus();
+            }
+        });
+        // 时间格式化
+        Vue.filter('format', function(value, arg) {
+            function dateFormat(date, format) {
+                if (typeof date === "string") {
+                    var mts = date.match(/(\/Date\((\d+)\)\/)/);
+                    if (mts && mts.length >= 3) {
+                        date = parseInt(mts[2]);
+                    }
+                }
+                date = new Date(date);
+                if (!date || date.toUTCString() == "Invalid Date") {
+                    return "";
+                }
+                var map = {
+                    "M": date.getMonth() + 1, //月份 
+                    "d": date.getDate(), //日 
+                    "h": date.getHours(), //小时 
+                    "m": date.getMinutes(), //分 
+                    "s": date.getSeconds(), //秒 
+                    "q": Math.floor((date.getMonth() + 3) / 3), //季度 
+                    "S": date.getMilliseconds() //毫秒 
+                };
+                format = format.replace(/([yMdhmsqS])+/g, function(all, t) {
+                    var v = map[t];
+                    if (v !== undefined) {
+                        if (all.length > 1) {
+                            v = '0' + v;
+                            v = v.substr(v.length - 2);
+                        }
+                        return v;
+                    } else if (t === 'y') {
+                        return (date.getFullYear() + '').substr(4 - all.length);
+                    }
+                    return all;
+                });
+                return format;
+            }
+            return dateFormat(value, arg);
+        })
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                flag: false,
+                submitFlag: false,
+                id: '',
+                name: '',
+                books: []
+            },
+            methods: {
+                handle: async function() {
+                    if (this.flag) {
+                        // 编辑图书提交
+                        // 路径：books/:id
+                        // 请求参数：name : 图书名称
+                        // 响应结果：status状态码，200成功，500失败
+
+                        // 改变路由，采用 put提交方式，调用后端方法，接收返回结果
+                        // axios.put('路由',{请求参数参数})
+                        // 前端路由采取 books/123 ，后端路由采取 books/:id req.parms.id
+                        var ret = await axios.put('books/' + this.id, {
+                            name: this.name
+                        });
+                        // 如果服务器端响应结果的状态码是200
+                        if (ret.status == 200) {
+                            // 编辑成功 重新加载列表数据
+                            this.queryData();
+                        }
+                        this.flag = false;
+                    } else {
+                        // 添加图书提交
+                        // 路径：books
+                        // 请求参数： name : 图书名称
+                        // 响应结果：status状态码，200成功，500失败
+
+                        var ret = await axios.post('books', {
+                            name: this.name
+                        })
+                        if (ret.status == 200) {
+                            this.queryData();
+                        }
+                    }
+                    // 清空表单
+                    this.id = '';
+                    this.name = '';
+                },
+                toEdit: async function(id) {
+                    // 编辑图书 将数据填充到表单域 未提交
+                    // 请求路径：books/:id
+                    // flag状态位用于：区分编辑和添加操作
+                    this.flag = true;
+                    // 根据id查询出对应的图书信息
+                    var ret = await axios.get('books/' + id);
+                    this.id = ret.id;
+                    this.name = ret.name;
+                },
+                deleteBook: async function(id) {
+                    // 删除图书
+                    var ret = await axios.delete('books/' + id);
+                    if (ret.status == 200) {
+                        // 重新加载列表数据
+                        this.queryData();
+                    }
+                },
+                queryData: async function() {
+                    // 调用后台接口获取图书列表数据
+                    // var ret = await axios.get('books');
+                    // this.books = ret.data;
+                    // 这里 axios结果不用通过 then()获取了，直接存储在 await里了
+                    this.books = await axios.get('books');
+                }
+            },
+            computed: {
+                total: function() {
+                    // 计算图书的总数
+                    return this.books.length;
+                }
+            },
+            watch: {
+                name: async function(val) {
+                    // 验证图书名称是否已经存在
+                    // var flag = this.books.some(function(item){
+                    //   return item.name == val;
+                    // });
+                    // 请求路径：books/book/:name
+                    // 响应结果："status": 1  // (1表示存在；2表示不存在)
+                    var ret = await axios.get('/books/book/' + this.name);
+                    if (ret.status == 1) {
+                        // 图书名称存在
+                        this.submitFlag = true;
+                    } else {
+                        // 图书名称不存在
+                        this.submitFlag = false;
+                    }
+                }
+            },
+            mounted: function() {
+                // var that = this;
+                // axios可用then获取处理结果
+                // axios.get('books').then(function(data){
+                //   console.log(data.data)
+                // 这个函数里的this并不是vm实例，一定要注意
+                //   that.books = data.data;
+                // })
+
+                // axios.get('books').then((data)=>{
+                //   console.log(data.data)
+                // 箭头函数里的this 指的是vm实例
+                //   this.books = data.data;
+                // })
+                // 调用 vm实例的queryData方法，调用vm实例自身方法一定要用this
+                this.queryData();
+            }
+        });
+    </script>
+</body>
+
+</html>

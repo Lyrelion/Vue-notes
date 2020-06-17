@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1> then参数中的函数返回值 </h1>
+    <p>可以返回一个新的promise对象，里面继续执行异步函数</p>
+    <p>可以返回函数调用，就是直接返回数据结果</p>
+    <script type="text/javascript">
+        function queryData(url) {
+            return new Promise(function(resolve, reject) {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState != 4) return;
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        resolve(xhr.responseText);
+                    } else {
+                        reject('服务器错误');
+                    }
+                };
+                xhr.open('get', url);
+                xhr.send(null);
+            });
+        }
+        queryData('http://localhost:3000/data')
+            .then(function(data) {
+                // 这里promise对象的 .then() 返回了数据结果
+                return queryData('http://localhost:3000/data1');
+            })
+            .then(function(data) {
+                // 这里promise对象的 .then() 返回了新的 promise对象
+                return new Promise(function(resolve, reject) {
+                    setTimeout(function() {
+                        resolve(123);
+                    }, 1000)
+                });
+            })
+            .then(function(data) {
+                // 这里的data得到的是上一个任务的异步处理结果，即123
+                console.log(data, '---我读取了返回promise对象的处理结果');
+                // 返回新的自定义数据结果
+                return 'hello';
+            })
+            .then(function(data) {
+                // 读取上面的新的自定义数据结果
+                console.log(data, '---我读取了返回数值的处理结果')
+            })
+    </script>
+</body>
+
+</html>

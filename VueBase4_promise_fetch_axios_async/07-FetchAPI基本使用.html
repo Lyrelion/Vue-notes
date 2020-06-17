@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Fetch API 基本用法</h1>
+    <p>fetch(url) </p>
+    <p>.then(data => return data.text()) </p>
+    <p>.then(data => console.log(data))</p>
+    <p> text()方法：属于 fetchAPI 的一部分，返回 promise对象，获取后台数据 </p>
+    <p> 继续读取 .text()返回的 promise对象 的数据</p>
+    <p> 最终使用了 两个 .then()，第一个里面的data 并非最终数据，包含 .text()方法后才是</p>
+
+    <script type="text/javascript">
+        fetch('http://localhost:3000/fdata')
+            .then(function(data) { // 此处的 data并非最终数据
+                // text()方法：fetchAPI的一部分，返回 Promise实例对象，获取后台数据
+                return data.text(); // data调用.text()方法变为最终数据
+            }) // 这里返回 promise对象
+            // 读取上面 text()返回的promise对象里的resolve，还要继续then
+            .then(function(data) { // 此处data是最终数据
+                console.log(data); // 这才是真实的后台数据
+            })
+            // Hello Fetch!
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 展示父组件中的值 -->
+        <div>{{pmsg}}</div>
+        <!-- 向子组件中传递父组件的值（属性动静态绑定） -->
+        <menu-item :pstr='pstr' :pnum='12' pboo='true' :parr='parr' :pobj='pobj'></menu-item>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                      父组件向子组件传值-props属性值类型
+                      pnum如果是动态绑定属性:pnum='12' 带冒号是数字类型
+                      pnum如果是静态 pnum='12' 不带冒号是字符类型
+                      :pboo='true' 带冒号是布尔类型
+                      pboo='true' 不带冒号是字符类型
+                    */
+
+        Vue.component('menu-item', {
+            // 接收上面标签中父组件传递的值
+            props: ['pstr', 'pnum', 'pboo', 'parr', 'pobj'],
+            template: `
+        <div>
+          <div>{{pstr}}</div>
+          <!-- 输出24 :pnum是数字类型 -->
+          <div>{{12 + pnum}}</div>
+          <!-- 输出string pboo不带冒号绑定的布尔值 被转换为字符串 -->
+          <div>{{typeof pboo}}</div>
+          <ul>
+            <li :key='index' v-for='(item,index) in parr'>{{item}}</li>
+          </ul>
+            <span>{{pobj.name}}</span>
+            <span>{{pobj.age}}</span>
+          </div>
+        </div>
+      `
+        });
+        var vm = new Vue({ // 父组件
+            el: '#app',
+            data: {
+                pmsg: '父组件中内容',
+                pstr: 'hello',
+                parr: ['apple', 'orange', 'banana'],
+                pobj: {
+                    name: '茶茶子',
+                    age: 21
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

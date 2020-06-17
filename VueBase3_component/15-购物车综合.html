@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style type="text/css">
+        .container {
+            background: #ffffcc;
+        }
+        
+        .container .cart {
+            width: 300px;
+            margin: auto;
+        }
+        
+        .container .title {
+            background-color: lightblue;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            /*color: #fff;*/
+        }
+        
+        .container .total {
+            background-color: #FFCE46;
+            height: 50px;
+            line-height: 50px;
+            text-align: right;
+        }
+        
+        .container .total button {
+            margin: 0 10px;
+            background-color: #DC4C40;
+            height: 35px;
+            width: 80px;
+            border: 0;
+        }
+        
+        .container .total span {
+            color: red;
+            font-weight: bold;
+        }
+        
+        .container .item {
+            height: 55px;
+            line-height: 55px;
+            position: relative;
+            border-top: 1px solid #ADD8E6;
+        }
+        
+        .container .item img {
+            width: 45px;
+            height: 45px;
+            margin: 5px;
+        }
+        
+        .container .item .name {
+            position: absolute;
+            width: 90px;
+            top: 0;
+            left: 55px;
+            font-size: 16px;
+        }
+        
+        .container .item .change {
+            width: 100px;
+            position: absolute;
+            top: 0;
+            right: 50px;
+        }
+        
+        .container .item .change a {
+            font-size: 20px;
+            width: 30px;
+            text-decoration: none;
+            background-color: lightgray;
+            vertical-align: middle;
+        }
+        
+        .container .item .change .num {
+            width: 40px;
+            height: 25px;
+        }
+        
+        .container .item .del {
+            position: absolute;
+            top: 0;
+            right: 0px;
+            width: 40px;
+            text-align: center;
+            font-size: 40px;
+            cursor: pointer;
+            color: red;
+        }
+        
+        .container .item .del:hover {
+            background-color: orange;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="container">
+            <!-- 购物车组件包裹在容器container里 -->
+            <!-- 根组件app中仅，展示了一个组件my-cart，它包含很多子组件 -->
+            <my-cart></my-cart>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        var CartTitle = { // 标题组件
+            props: ['uname'], // props接收父组件传值
+            template: `
+        <div class="title">{{uname}}的商品</div>`
+        }
+        var CartList = { //列表组件
+            // v-model呈现item.num会导致子组件更改父组件数据，不符合props单向数据流
+            // 所以采用动态属性绑定:value呈现 商品数目输入域 文本值  :value='item.num'
+            // 输入域失去焦点后，触发输入域值更改操作
+            // 不能在子组件中直接修改，考虑自定义事件，让子组件向父组件中传参，在父组件中实现更改
+            // @blur='changeNum(item.id, $event)' 需要传 被点击的id，输入框的值 event.target.value
+            props: ['list'], // props接收父组件传值
+            template: `
+        <div>
+          <div :key='item.id' v-for='item in list' class="item">
+            <!--注意：图片属性绑定动态填充 必须使用:-->
+            <img :src="item.img"/>
+            <div class="name">{{item.name}}</div>
+            <!--商品数目变更模块-->
+            <div class="change">
+            <!--绑定点击事件，阻止自动跳转，给调用函数传入被点击的id-->
+              <a href="" @click.prevent='sub(item.id)'>－</a>
+              <input type="text" class="num" :value='item.num' @blur='changeNum(item.id, $event)'/>
+              <a href="" @click.prevent='add(item.id)'>＋</a>
+            </div>
+            <div class="del" @click='del(item.id)'>×</div>
+          </div>
+        </div>
+      `,
+            methods: {
+                // 子组件中不能对父组件中的数据进行操作，所以采用自定义事件，更新商品数目
+                // 子组件中声明 同一个自定义事件：'change-num'，用 type属性区分三种操作
+                // 之前学的子组件声明自定义事件，是在子组件模板中直接给点击事件绑定自定义事件
+                // @click=$emit('change-num',{xxxxx....参数})
+                // 现在我们在子组件模板中，给点击事件添加正常的事件函数 changeNum()
+                // 又在这个正常的事件函数中，定义了自定义事件 this.$emit(....)
+                // 自这些自定义事件被返回，最终在父组件的模板中进行 声明绑定方法
+                // 父组件中给子组件的自定义事件绑定方法：@change-num='change233($event)'
+                // 上面的$event 就存储了 $emit 传递的全部参数
+                changeNum: function(id, event) { // 输入域值更改
+                    return this.$emit('change-num', { // 声明自定义事件$emit('事件名'，参数对象)
+                        id: id, // 被点击的id
+                        type: 'change',
+                        num: event.target.value // 子组件输入域内当前的值
+                    });
+                },
+                sub: function(id) {
+                    return this.$emit('change-num', {
+                        id: id,
+                        type: 'sub'
+                    });
+                },
+                add: function(id) {
+                    return this.$emit('change-num', {
+                        id: id,
+                        type: 'add'
+                    });
+                },
+                del: function(id) {
+                    return this.$emit('cart-del', id);
+                }
+            }
+        }
+        var CartTotal = { // 结算组件
+            props: ['list'], // props接收父组件传来的值
+            template: `
+        <div class="total">
+          <!--此处利用了计算属性-->
+          <span>总价：{{total}}</span>
+          <button>结算</button>
+        </div>
+      `,
+            computed: { // 计算属性
+                total: function() { // 计算商品的总价
+                    var t = 0;
+                    this.list.forEach(item => { // 遍历列表求总价
+                        t += item.price * item.num;
+                    });
+                    return t;
+                }
+            }
+        }
+        Vue.component('my-cart', { // 购物车作为父组件，包含三个子组件
+            data: function() { // data必须是函数
+                return {
+                    uname: '茶茶子',
+                    list: [{
+                        id: 1,
+                        name: 'TCL彩电',
+                        price: 1000,
+                        num: 1,
+                        img: 'img/a.jpg'
+                    }, {
+                        id: 2,
+                        name: '机顶盒',
+                        price: 1000,
+                        num: 1,
+                        img: 'img/b.jpg'
+                    }, {
+                        id: 3,
+                        name: '海尔冰箱',
+                        price: 1000,
+                        num: 1,
+                        img: 'img/c.jpg'
+                    }, {
+                        id: 4,
+                        name: '小米手机',
+                        price: 1000,
+                        num: 1,
+                        img: 'img/d.jpg'
+                    }, {
+                        id: 5,
+                        name: 'PPTV电视',
+                        price: 1000,
+                        num: 2,
+                        img: 'img/e.jpg'
+                    }]
+                }
+            },
+            // 把 uname通过动态属性绑定 传给 子组件cart-title
+            // 把 list通通过动态属性绑定 传给 子组件cart-total / cart-list
+            // 子组件标签中调用自定义事件，父组件给其添加事件方法 ：
+            // @cart-del='delCart($event)' 根据id删除父组件列表中的商品
+            // @change-num='changeNum($event)' 改变父组件中的商品数目
+            // $event：包含子组件自定义事件传过来的全部参数，id/输入框当前文本等等
+            template: `
+        <div class='cart'>
+          <!--购物车中包含三个子组件，动态属性绑定 实现父组件给子组件传值-->
+          <cart-title :uname='uname'></cart-title>
+          <!--列表模块 监听子组件的自定义事件 实现商品数目改变监听 商品删除监听-->
+          <!--注意此处给自定义事件绑定函数，所有子组件传来的值对象，都保存在$event-->
+          <cart-list :list='list' @change-num='change233($event)' @cart-del='delCart($event)'></cart-list>
+          <cart-total :list='list'></cart-total>
+        </div>
+      `,
+            components: {
+                // 在父组件中声明子组件，在外部定义子组件，注意 '短横线':驼峰
+                'cart-title': CartTitle,
+                'cart-list': CartList,
+                'cart-total': CartTotal
+            },
+            methods: { // 在父组件中 给子组件标签中的 自定义事件 添加事件方法
+                change233: function(val) {
+                    // val就是上面的$event，是子组件传过来的各种参数
+                    // 改变输入域的值 分三种情况：输入域变更、加号变更、减号变更
+                    if (val.type == 'change') { // 输入域变更
+                        // 根据子组件传递过来的数据，更新 原list中对应的数据
+                        // 遍历原list，如果 原list.id = 子组件传递过来的id
+                        // 将 原list.num 更改为 子组件传递过来的最新输入域num
+                        this.list.some(item => {
+                            if (item.id == val.id) { // 原list.id = 被点击的id
+                                item.num = val.num;
+                                // some()固定用法 —— 终止遍历 —— return true;
+                                return true;
+                            }
+                        });
+                    } else if (val.type == 'sub') { // 减一操作
+                        // 遍历原list，如果 原list-id = 子组件传递过来的id
+                        // 将原list.num-1
+                        this.list.some(item => {
+                            if (item.id == val.id) {
+                                item.num -= 1;
+                                return true;
+                            }
+                        });
+                    } else if (val.type == 'add') {
+                        this.list.some(item => {
+                            if (item.id == val.id) {
+                                item.num += 1;
+                                return true;
+                            }
+                        });
+                    }
+                },
+                delCart: function(id) {
+                    // 子组件标签引用了自定义事件：@cart-del='delCart($event)'
+                    // 父组件中完善自定义事件监听方法 delCart
+                    // 根据传过来的被点击删除按钮的id，删除原list中对应的商品
+                    // 1、找到id所对应数据的索引
+                    var index = this.list.findIndex(item => {
+                        return item.id == id;
+                    });
+                    // 2、根据索引删除对应数据 从哪开始删，删几个
+                    this.list.splice(index, 1);
+                }
+            }
+        });
+        var vm = new Vue({
+            el: '#app',
+            data: {}
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <P>实例化promise对象，在其内部执行异步函数 </P>
+    <p>调用promise对象，使用他的 .then(fn(){},fn(){})方法 获取执行将结果</p>
+    <script type="text/javascript">
+        /*
+                      Promise基本使用：解决异步深层嵌套的问题
+                    */
+        // console.log(typeof Promise) // function函数，函数也是对象
+        // console.dir(Promise);
+        // 实例化 Promise构造函数，函数内有一个参数函数，这个参数函数带有两个函数参数
+        var p = new Promise(function(resolve, reject) {
+            // resolve：异步操作执行 成功 后的回调函数
+            // reject：异步操作执行 失败 后的回调函数
+            // 这里用于实现异步任务
+            setTimeout(function() {
+                var flag = false;
+                if (flag) {
+                    // 正常情况
+                    resolve('hello');
+                } else {
+                    // 异常情况
+                    reject('出错了');
+                }
+            }, 100);
+        });
+        // Promise 实例生成后，用 then方法指定 resolved状态 和 reject状态的回调函数 
+        // then方法中，也可以直接 return数据，而不是 Promise对象
+        p.then(function(data) {
+            console.log(data)
+        }, function(info) {
+            console.log(info)
+        });
+        // 开启服务器，在浏览器中直接打开本文件，不要输入网址，在控制台中查看信息
+    </script>
+</body>
+
+</html>

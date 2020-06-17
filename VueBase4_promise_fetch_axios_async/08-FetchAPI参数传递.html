@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Fetch API 调用接口传递参数</h1>
+    <p>fetch(url, {options}).then().then()</p>
+    <p>HTTP协议 提供了很多的方法，如：POST，GET，DELETE，UPDATE，PUT</p>
+    <p>需要在 options对象 中 指定对应的 method method:请求使用的方法</p>
+    <hr>
+    <P>GET参数传递-传统URL----前端传递 url?id=123----后台接收/url--- req.query.id</P>
+    <p>GET参数传递-restful URL----前端传递 url/456----后台接收/url:id---req.params.id </p>
+    <p>GET / DELETE 类似</p>
+    <hr>
+    <p>post参数传递 要在options对象 中设置 传递方式method，请求头headers，传递参数body</p>
+    <p>post参数传递 请求头headers中的参数类型，应该和传递参数body中保持一致</p>
+    <p>'Content-Type': 'application/x-www-form-urlencoded'-----'uname=茶茶子&pwd=123'</p>
+    <p>'Content-Type': 'application/json'-----JSON.stringify({ uname: '茶茶子'})</p>
+    <p>注意：body中默认传递字符串，如果想传递JSON对象格式的参数，需要将之转换为JSON字符串：JSON.stringify()</p>
+    <p>POST参数传递-传统URL----前端传递 url----后台接收/url--- req.body.uname</p>
+    <p>PUT参数传递-restful URL----前端传递 url/789----后台接收/url:id---req.params.uname</p>
+    <p>POST / PUT 类似</p>
+    <hr>
+    <p>由此可见，restful形式的URL，在后台都采用 req.params.xxx 的形式获取地址栏参数，采用 req.body.xxx获取请求体参数</p>
+    <p>传统URL，在后台采用 req.query.xxx/ req.body.xxx 的形式获取参数</p>
+    <script type="text/javascript">
+        // GET参数传递-传统URL
+        // 在请求地址中传送参数，通过url ? 的形式传参
+        // fetch('http://localhost:3000/books?id=123', {
+        //   method: 'get' 
+        // })
+        //   .then(function(data){
+        //     return data.text(); // 返回 Promise实例对象，用于获取后台返回的数据
+        //   }).then(function(data){
+        //     console.log(data) // 在这个then里面我们能拿到最终的数据
+        //   });
+
+        // GET参数传递-restful形式的URL
+        // fetch('http://localhost:3000/books/456', { 
+        //   method: 'get'
+        // })
+        //   .then(function(data){
+        //     return data.text();
+        //   }).then(function(data){
+        //     console.log(data)
+        //   });
+
+        // DELETE参数传递-restful形式的URL
+        // fetch('http://localhost:3000/books/789', {
+        //   method: 'delete' // 在请求地址中传送参数 删除id=789
+        // })
+        //   .then(function(data){
+        //     return data.text();
+        //   }).then(function(data){
+        //     console.log(data)
+        //   });
+
+        // POST请求传参
+        // 注意此时的fetch第二个参数里，要设置请求方式、设置响应头、设置body传递数据
+        // 响应头格式 和 body传递数据格式 应该一致
+        // fetch('http://localhost:3000/books', {
+        //   method: 'post',
+        //   headers: { // 设置请求头 字符串格式↓
+        //     'Content-Type': 'application/x-www-form-urlencoded'}
+        //   body: 'uname=茶茶子&pwd=123', // 传递数据 字符串格式
+        //   
+        // })
+        //   .then(function(data){
+        //     return data.text();
+        //   }).then(function(data){
+        //     console.log(data)
+        //   });
+
+        // POST请求传参
+        fetch('http://localhost:3000/books', {
+                method: 'post',
+                headers: { // 设置请求头 JSON对象格式↓
+                    'Content-Type': 'application/json'
+                },
+                // body传递参数格式默认为字符串
+                // 所以要手动把JSON对象格式数据转化成字符串JSON.stringify()
+                body: JSON.stringify({ // 传递数据 JSON对象格式
+                    uname: '茶茶子',
+                    pwd: '456'
+                })
+            })
+            .then(function(data) {
+                return data.text();
+            }).then(function(data) {
+                console.log(data)
+            });
+
+        // PUT请求传参
+        // fetch('http://localhost:3000/books/123', {
+        //         method: 'put',
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         },
+        //         body: JSON.stringify({
+        //             uname: '茶茶子',
+        //             pwd: '789'
+        //         })
+        //     })
+        //     .then(function(data) {
+        //         return data.text();
+        //     }).then(function(data) {
+        //         console.log(data)
+        //     }); // put跨域问题未解决
+    </script>
+</body>
+
+</html>

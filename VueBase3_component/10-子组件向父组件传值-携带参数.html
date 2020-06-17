@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <div :style='{fontSize: fontSize + "px"}'>{{pmsg}}</div>
+        <!-- 子组件标签中调用自定义事件，并给他绑定函数方法 -->
+        <!-- 注意：此处为了传参，一定要在函数方法内携带 $event 不能写其他的-->
+        <menu-item :parr='parr' @enlarge-text='handle($event)'></menu-item>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                      子组件向父组件传值-携带参数
+                    */
+
+        Vue.component('menu-item', {
+            // 子组件接收父组件传递的参数
+            props: ['parr'],
+            // 子组件模板内添加带参数的自定义事件 $emit('自定义事件名',参数)
+            template: `
+        <div>
+          <ul>
+            <li :key='index' v-for='(item,index) in parr'>{{item}}</li>
+          </ul>
+          <button @click='$emit("enlarge-text", 5)'>扩大父组件中字体大小</button>
+          <button @click='$emit("enlarge-text", 10)'>扩大父组件中字体大小</button>
+        </div>
+      `
+        });
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                pmsg: '父组件中内容',
+                parr: ['apple', 'orange', 'banana'],
+                fontSize: 10
+            },
+            methods: {
+                // 父组件中给子组件的自定义事件 定义方法，并接受参数
+                handle: function(val) { // 此处的参数可以不用写 event
+                    // 扩大字体大小
+                    this.fontSize += val;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

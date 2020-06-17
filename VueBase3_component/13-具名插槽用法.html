@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <base-layout>
+            <!-- 直接引用插槽名字进行填充 -->
+            <!-- 缺点：只能给一个标签填写 slot名字，也就是插槽内只存在一个标签p -->
+            <p slot='header'>标题信息</p>
+            <!-- 没有引用插槽名字 默认填写在main里 不限制标签个数 -->
+            <p>主要内容1</p>
+            <p>主要内容2</p>
+            <p slot='footer'>底部信息信息</p>
+        </base-layout>
+
+        <!-- <template>：临时包裹标签的作用，本身不会渲染在页面，上面的p会渲染到页面 -->
+        <!-- 把slot名字写在 template标签中 就可以向 tempalte传递很多标签 可以渲染多个p -->
+        <base-layout>
+            <template slot='header'>
+        <p>标题信息1</p>
+        <p>标题信息2</p>
+      </template>
+            <p>主要内容1</p>
+            <p>主要内容2</p>
+            <template slot='footer'>
+        <p>底部信息信息1</p>
+        <p>底部信息信息2</p>
+      </template>
+        </base-layout>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript">
+        /*
+                      具名插槽
+                    */
+        Vue.component('base-layout', {
+            template: `
+        <div>
+          <header>
+            <!--此处给 slot插槽 进行了命名-->
+            <slot name='header'></slot>
+          </header>
+          <main>
+            <slot></slot>
+          </main>
+          <footer>
+            <slot name='footer'></slot>
+          </footer>
+        </div>
+      `
+        });
+        var vm = new Vue({
+            el: '#app',
+            data: {}
+        });
+    </script>
+</body>
+
+</html>
